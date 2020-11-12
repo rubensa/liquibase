@@ -1,0 +1,89 @@
+{
+  "name": "liquibase",
+  "workspaceFolder": "/workspace",
+  "dockerFile": "Dockerfile",
+  // Connect as an existing non-root user in the container.
+  // On Linux, by default, the container user's UID/GID will be updated to match your local user.
+  "remoteUser": "user",
+  "runArgs": [
+    // Mounts the project folder to '/workspace'
+    "--mount",
+    "type=bind,source=${localWorkspaceFolder},target=/workspace",
+    // VSCode server extensions cache
+    "--mount",
+    "type=volume,source=vscode-server-extensions-cache,target=/home/user/.vscode-server/extensionsCache",
+    // SDKMan archives cache
+    "--mount",
+    "type=volume,source=sdkman-archives-cache,target=/opt/sdkman/archives",
+    // Maven repository cache
+    "--mount",
+    "type=volume,source=m2-repository-cache,target=/home/user/.m2/repository"
+  ],
+  // Install Java 11
+  "postCreateCommand": [
+    "/bin/bash",
+    "-i",
+    "-c",
+    "export JAVA_VERSION=11.0; export JAVA_INSTALL_VERSION=$(sdk list java | grep -o \"${JAVA_VERSION}\\.[0-9\\.]*hs-adpt\" | head -1); sdk install java $JAVA_INSTALL_VERSION || true; ln -s /opt/sdkman/candidates/java/$JAVA_INSTALL_VERSION /opt/sdkman/candidates/java/$JAVA_VERSION; export MAVEN_VERSION=3.6; export MAVEN_INSTALL_VERSION=$(sdk list maven | grep -o \"${MAVEN_VERSION}\\.[0-9\\.]*\" | head -1); sdk install maven $MAVEN_INSTALL_VERSION || true;"
+  ],
+  "extensions": [
+    // Spring boot support
+    "pivotal.vscode-boot-dev-pack",
+    // JavaDoc
+    "madhavd1.javadoc-tools",
+    // Java Support
+    "dgileadi.java-decompiler",
+    "vscjava.vscode-java-pack",
+    // XML Support
+    "redhat.vscode-xml",
+    // GIT support
+    "mhutchie.git-graph",
+    "eamodio.gitlens",
+    // History support
+    "xyz.local-history"
+  ],
+  "settings": {
+    // Increase memory for Java Language Server
+    "java.jdt.ls.vmargs": "-noverify -Xmx3G -Xss128M -XX:+UseG1GC -XX:+UseStringDeduplication",
+    // Configure spring-boot 
+    "spring-boot.ls.java.home": "/opt/sdkman/candidates/java/11.0",
+    // Configure Maven
+    "maven.executable.path": "/opt/sdkman/candidates/maven/current/bin/mvn",
+    "maven.terminal.useJavaHome": true,
+    "maven.executable.preferMavenWrapper": true,
+    // Configure Java
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-11",
+        "path": "/opt/sdkman/candidates/java/11.0",
+      }
+    ],
+    "java.home": "/opt/sdkman/candidates/java/11.0",
+    // Configure glob patterns for excluding files and folders
+    "files.exclude": {
+      "**/.classpath": true,
+      "**/.project": true,
+      "**/.settings": true,
+      "**/.factorypath": true,
+      "**/.history": true
+    },
+    // Ensure VS Code uses the right one for terminals and tasks.
+    "terminal.integrated.shell.linux": "/bin/bash",
+    // Run interactive bash shell in VSCode integrated terminal
+    "terminal.integrated.shellArgs.linux": [
+      "-i"
+    ],
+    // Show control characters
+    "editor.renderControlCharacters": true,
+    // Do not use current file indentation
+    "editor.detectIndentation": false,
+    // Use 2 characters for tabs
+    "editor.tabSize": 2,
+    // Format code on paste
+    "editor.formatOnPaste": true,
+    // Format code on file save
+    "editor.formatOnSave": true,
+    // Format code while typing
+    "editor.formatOnType": true
+  }
+}
