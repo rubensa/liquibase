@@ -15,8 +15,8 @@
 
   <properties>
     <java.version>11</java.version>
-    <liquibase-hibernate5.version>3.7</liquibase-hibernate5.version>
-    <liquibase-maven-plugin.version>3.8.8</liquibase-maven-plugin.version>
+    <liquibase-hibernate5.version>4.1.1</liquibase-hibernate5.version>
+    <liquibase-maven-plugin.version>4.1.1</liquibase-maven-plugin.version>
     <javax.activation-api.version>1.2.0</javax.activation-api.version>
   </properties>
 
@@ -90,6 +90,24 @@
             <groupId>org.liquibase.ext</groupId>
             <artifactId>liquibase-hibernate5</artifactId>
             <version>${liquibase-hibernate5.version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-envers</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.0-api</artifactId>
+              </exclusion>
+            </exclusions>
           </dependency>
           <dependency>
             <groupId>org.springframework.boot</groupId>
